@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="https://yt3.googleusercontent.com/NA1N99kaC6pQY60HZ_lWSk1tF_E59Am0YrIQIGtkOB8Bah7bB0d1O27dpXlSEQyqWX9jAjz6Z2c=s900-c-k-c0x00ffffff-no-rj">
+  <title>Questionário Problems</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #00d2ff 0%, #0081a7 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      background-color: transparent;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Menu Inicial */
+    .start-menu {
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+    }
+
+    .start-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+
+    .nickname-input {
+      width: 100%;
+      max-width: 350px;
+      padding: 16px 20px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: center;
+      border: 3px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+      margin-bottom: 20px;
+    }
+
+    .btn-start {
+      background-color: #333333;
+      color: #ffffff;
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border-radius: 8px;
+      box-shadow: 0 5px 0px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    /* Caixa da Pergunta */
+    .question-box {
+      background: #ffffff;
+      padding: 25px 25px 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .number-badge {
+      width: 60px;
+      height: 60px;
+      min-width: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0px rgba(0,0,0,0.2);
+    }
+
+    .number-badge .num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .badge-q1 { background-color: #e21b3c; }
+    .badge-q2 { background-color: #1368ce; }
+    .badge-q3 { background-color: #d89e00; }
+
+    .question-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #2c3e50;
+      line-height: 1.3;
+    }
+
+    /* Grid de Opções */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .option-card {
+      border: none;
+      border-radius: 8px;
+      padding: 20px 15px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: 90px;
+      text-align: left;
+    }
+
+    .option-card:nth-child(1) { background-color: #e21b3c; box-shadow: 0 6px 0px #9b1128; }
+    .option-card:nth-child(2) { background-color: #1368ce; box-shadow: 0 6px 0px #0a3d7c; }
+    .option-card:nth-child(3) { background-color: #d89e00; box-shadow: 0 6px 0px #8f6800; }
+    .option-card:nth-child(4) { background-color: #26890c; box-shadow: 0 6px 0px #144906; }
+
+    .option-card.selected {
+      outline: 5px solid #ffffff;
+      transform: scale(1.02);
+    }
+
+    .shape-icon {
+      font-size: 1.4rem;
+      display: inline-block;
+      width: 28px;
+      text-align: center;
+    }
+
+    .btn-next {
+      background-color: #ffffff;
+      color: #0081a7;
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border-radius: 8px;
+      box-shadow: 0 5px 0px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: none;
+      margin: 0 auto;
+    }
+
+    /* Loader */
+    .loader-container {
+      display: none;
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid #1368ce;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Mini Spinner do Botão */
+    .btn-spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    /* Container do Captcha */
+    .captcha-stage-wrapper {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+
+    .iframe-wrapper {
+        transform: scale(1.3);
+      width: 100%;
+      max-width: 540px;
+      height: 470px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 8px 0px rgba(0,0,0,0.15);
+    }
+
+    iframe {
+        
+      width: 110%;
+      height: 680px;
+      border: none;
+      position: absolute;
+      top: -125px;
+      left: -5%;
+      transform: scale(0.95);
+      transform-origin: top center;
+    }
+
+    /* Tela Verde sobre o Iframe */
+    .success-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #2ecc71;
+      color: #ffffff;
+      z-index: 10;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .success-overlay h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .success-overlay p {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* Botão de Prosseguir */
+    .btn-continue-captcha {
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      border-radius: 8px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      position: absolute;
+      top: 549px; /* Trava a posição do botão bem abaixo do iframe expandido */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+    }
+
+    .btn-continue-captcha.loading {
+      background-color: #95a5a6;
+      color: #ffffff;
+      box-shadow: 0 5px 0px #7f8c8d;
+      cursor: not-allowed;
+      opacity: 0.9;
+    }
+
+    .btn-continue-captcha.ready {
+      background-color: #27ae60;
+      color: #ffffff;
+      box-shadow: 0 5px 0px #1e8449;
+      cursor: pointer;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <!-- Menu Inicial -->
+    <div class="start-menu" id="start-menu">
+      <h1 class="start-title">Questionário do Problems</h1>
+      <input type="text" class="nickname-input" id="player-name" placeholder="Digite seu nome..." maxlength="15" autocomplete="off">
+      <button class="btn-start" onclick="startQuiz()">OK, ir!</button>
+    </div>
+
+    <!-- Área das Perguntas -->
+    <div id="quiz-content" style="display: none;">
+      <div class="question-box">
+        <div class="number-badge badge-q1" id="number-badge">
+          <span class="num" id="badge-num">1</span>
+        </div>
+        <h2 class="question-title" id="question-text">Carregando pergunta...</h2>
+      </div>
+      
+      <div class="options-grid" id="options-container"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Avançar</button>
+    </div>
+
+    <!-- Indicador de Carregamento -->
+    <div class="loader-container" id="loader">
+      <div class="spinner"></div>
+      <p id="loader-text" style="color: #2c3e50; font-weight: 700; font-size: 1.1rem;">Carregando próxima pergunta...</p>
+    </div>
+
+    <!-- Área do Captcha Embed -->
+    <div class="captcha-stage-wrapper" id="captcha-stage">
+      <div class="iframe-wrapper">
+        <iframe id="captcha-frame" src="about:blank"></iframe>
+        
+        <div class="success-overlay" id="success-overlay">
+          <h2>✓ Captcha Concluído!</h2>
+          <p>Verificação de segurança confirmada.</p>
+        </div>
+      </div>
+
+      <button class="btn-continue-captcha" id="btn-continue-captcha" onclick="completeCaptchaStage()">
+        <span class="btn-spinner" id="btn-spinner"></span>
+        <span id="btn-text">Carregando verificação...</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+  {
+    question: "1. Qual é o seu estilo de jogo principal no Minecraft?",
+    options: [
+      "Construtor (focado em casas e cidades)",
+      "Explorador (cavernas e estruturas)",
+      "Redstone / Técnico (farms automáticas)",
+      "PvP / Combatente (minijogos e lutas)"
+    ]
+  },
+  {
+    question: "2. Onde você prefere construir a sua base principal?",
+    options: [
+      "No topo de uma montanha bem alta",
+      "Subterrânea ou dentro de uma caverna",
+      "Em uma ilha ou perto do oceano",
+      "Escondida dentro da dimensão do Nether"
+    ]
+  },
+  {
+    question: "3. Qual é o seu mob favorito de todo o jogo?",
+    options: [
+      "Creeper",
+      "Enderman",
+      "Lobo",
+      "Villager"
+    ]
+  },
+  {
+    question: "4. Qual item você faz questão de encantar no máximo primeiro?",
+    options: [
+      "Picareta",
+      "Espada",
+      "Élitro",
+      "Armadura de Diamante"
+    ]
+  },
+  {
+    question: "5. Qual é a sua dimensão favorita no jogo?",
+    options: [
+      "Overworld",
+      "Nether",
+      "The End",
+      "Gosto de todas igualmente"
+    ]
+  },
+  {
+    question: "6. Qual atividade você mais gosta de fazer quando joga com amigos?",
+    options: [
+      "Fazer um mapa / cidade juntos",
+      "Explorar e zerar o jogo rápido",
+      "Construir farms gigantescas",
+      "Fazer guerras e trollagens"
+    ]
+  },
+  {
+    question: "7. Qual tipo de bloco você mais usa nas suas construções?",
+    options: [
+      "Madadeiras",
+      "Pedras",
+      "Concreto e Blocos Coloridos",
+      "Quartzo e Vidros"
+    ]
+  }
+];
+
+    const shapes = ["▲", "◆", "●", "■"];
+    const badgeClasses = ["badge-q1", "badge-q2", "badge-q3"];
+
+    let currentQuestionIndex = 0;
+    let timer5s = null;
+    let timer30s = null;
+
+    function startQuiz() {
+      document.getElementById('start-menu').style.display = 'none';
+      renderQuestion();
+      document.getElementById('quiz-content').style.display = 'block';
+    }
+
+    function selectOption(element) {
+      const options = document.querySelectorAll('.option-card');
+      options.forEach(opt => opt.classList.remove('selected'));
+
+      element.classList.add('selected');
+      document.getElementById('btn-next').style.display = 'block';
+    }
+
+    function nextQuestion() {
+      document.getElementById('quiz-content').style.display = 'none';
+      document.getElementById('btn-next').style.display = 'none';
+
+      currentQuestionIndex++;
+
+      // Sempre exibe a mensagem padrão primeiro
+      document.getElementById('loader-text').textContent = 'Carregando próxima pergunta...';
+      document.getElementById('loader').style.display = 'block';
+
+      if (currentQuestionIndex === 3) {
+        // Transição suave de texto antes do CAPTCHA 1
+        setTimeout(() => {
+          document.getElementById('loader-text').textContent = 'Verificando segurança (Captcha)...';
+        }, 1000);
+
+        setTimeout(() => {
+          triggerFirstCaptcha();
+        }, 2200);
+
+      } else if (currentQuestionIndex === 6) {
+        // Transição suave de texto antes do CAPTCHA 2 (Definitivo)
+        setTimeout(() => {
+          document.getElementById('loader-text').textContent = 'Verificando segurança (Captcha)...';
+        }, 1000);
+
+        setTimeout(() => {
+          triggerFinalCaptcha();
+        }, 2200);
+
+      } else if (currentQuestionIndex < questions.length) {
+        // Carregamento de pergunta normal
+        setTimeout(() => {
+          document.getElementById('loader').style.display = 'none';
+          renderQuestion();
+          document.getElementById('quiz-content').style.display = 'block';
+        }, 1500);
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQuestionIndex];
+      const badgeClass = badgeClasses[currentQuestionIndex % 3];
+      
+      document.getElementById('question-text').textContent = q.question;
+
+      const badge = document.getElementById('number-badge');
+      badge.className = 'number-badge ' + badgeClass;
+      document.getElementById('badge-num').textContent = currentQuestionIndex + 1;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      q.options.forEach((optionText, index) => {
+        const card = document.createElement('div');
+        card.className = 'option-card';
+        card.innerHTML = `<span class="shape-icon">${shapes[index]}</span> <span>${optionText}</span>`;
+        card.onclick = function() { selectOption(this); };
+        container.appendChild(card);
+      });
+    }
+
+    function triggerFirstCaptcha() {
+      const btn = document.getElementById('btn-continue-captcha');
+      const btnSpinner = document.getElementById('btn-spinner');
+      const btnText = document.getElementById('btn-text');
+      const overlay = document.getElementById('success-overlay');
+
+      overlay.style.display = 'none';
+      btn.style.display = 'none';
+      btn.className = 'btn-continue-captcha loading';
+      btnSpinner.style.display = 'inline-block';
+      btnText.textContent = 'Carregando verificação...';
+      btn.disabled = true;
+
+      const iframe = document.getElementById('captcha-frame');
+      
+      // ESPERA O IFRAME CARREGAR NOS BASTIDORES ANTES DE MOSTRAR NA TELA
+      iframe.onload = function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('captcha-stage').style.display = 'flex';
+
+        // 1. Em 5 segundos (com o iframe já visível): O botão com spinner aparece
+        timer5s = setTimeout(() => {
+          btn.style.display = 'inline-flex';
+        }, 5000);
+
+        // 2. Em 30 segundos: Tela verde e botão pronto
+        timer30s = setTimeout(() => {
+          overlay.style.display = 'flex';
+          btn.className = 'btn-continue-captcha ready';
+          btnSpinner.style.display = 'none';
+          btnText.textContent = 'Prosseguir';
+          btn.disabled = false;
+        }, 30000);
+      };
+
+      // Carrega a URL do Neal.fun (com a tela de loader ainda ativa por cima)
+      iframe.src = "https://embed.neal.fun/not-a-robot/?level=1";
+    }
+
+    function completeCaptchaStage() {
+      const btn = document.getElementById('btn-continue-captcha');
+      if (btn.disabled) return;
+
+      clearTimeout(timer5s);
+      clearTimeout(timer30s);
+
+      document.getElementById('captcha-stage').style.display = 'none';
+      renderQuestion();
+      document.getElementById('quiz-content').style.display = 'block';
+    }
+
+    function triggerFinalCaptcha() {
+      document.getElementById('success-overlay').style.display = 'none';
+      document.getElementById('btn-continue-captcha').style.display = 'none';
+
+      const iframe = document.getElementById('captcha-frame');
+      
+      // ESPERA O IFRAME CARREGAR NOS BASTIDORES ANTES DE MOSTRAR NA TELA
+      iframe.onload = function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('captcha-stage').style.display = 'flex';
+      };
+
+      iframe.src = "https://embed.neal.fun/not-a-robot/?level=5";
+    }
+  </script>
+</body>
+</html>
