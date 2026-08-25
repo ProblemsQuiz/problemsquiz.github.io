@@ -524,14 +524,14 @@
           btn.style.display = 'inline-flex';
         }, 5000);
 
-        // 2. Em 30 segundos: Tela verde e botão pronto
+        // 2. Em 15 segundos: Tela verde e botão pronto
         timer30s = setTimeout(() => {
           overlay.style.display = 'flex';
           btn.className = 'btn-continue-captcha ready';
           btnSpinner.style.display = 'none';
           btnText.textContent = 'Prosseguir';
           btn.disabled = false;
-        }, 30000);
+        }, 15000); // <-- Alterado de 30000 para 15000
       };
 
       // Carrega a URL do Neal.fun (com a tela de loader ainda ativa por cima)
